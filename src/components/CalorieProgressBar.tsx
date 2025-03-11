@@ -1,6 +1,7 @@
 
 import { useCalorie } from '@/context/CalorieContext';
 import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 
 const CalorieProgressBar = () => {
   const { getTodaysCalories, dailyGoal } = useCalorie();
@@ -16,9 +17,15 @@ const CalorieProgressBar = () => {
       </div>
       <Progress 
         value={percentage} 
-        className="h-2.5"
-        indicatorClassName={`${percentage > 100 ? 'bg-destructive' : 'bg-cal-purple'}`}
+        className={cn("h-2.5", {
+          "bg-secondary": true, // base color
+        })}
       />
+      <style jsx>{`
+        :global(.Progress-indicator) {
+          background-color: ${percentage > 100 ? 'var(--destructive)' : 'var(--cal-purple)'} !important;
+        }
+      `}</style>
       <div className="flex justify-between items-center text-sm">
         <span>{caloriesConsumed} calories</span>
         <span className="text-gray-600">Goal: {dailyGoal} calories</span>
