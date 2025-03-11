@@ -6,71 +6,75 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CalorieProvider } from "./context/CalorieContext";
 import { UserProfileProvider } from "./context/UserProfileContext";
+import { AuthProvider } from "./context/AuthContext";
 import { AppLayout } from "./components/AppSidebar";
 import Dashboard from "./pages/Dashboard";
 import AddEntry from "./pages/AddEntry";
 import History from "./pages/History";
 import NotFound from "./pages/NotFound";
 import ProfileSetup from "./pages/ProfileSetup";
-import { useEffect, useState } from "react";
 import ProfileUpdatePrompt from "./components/ProfileUpdatePrompt";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
 const AppRoutes = () => {
-  const [isProfileSet, setIsProfileSet] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    // Check if profile exists in local storage
-    const userProfile = localStorage.getItem('userProfile');
-    setIsProfileSet(!!userProfile);
-  }, []);
-
-  // Show loading state while checking
-  if (isProfileSet === null) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
-  }
-
   return (
     <Routes>
-      {!isProfileSet ? (
-        <>
-          <Route path="/profile-setup" element={<ProfileSetup />} />
-          <Route path="*" element={<Navigate to="/profile-setup" replace />} />
-        </>
-      ) : (
-        <>
-          <Route 
-            path="/" 
-            element={
-              <AppLayout>
-                <ProfileUpdatePrompt />
-                <Dashboard />
-              </AppLayout>
-            } 
-          />
-          <Route 
-            path="/add-entry" 
-            element={
-              <AppLayout>
-                <ProfileUpdatePrompt />
-                <AddEntry />
-              </AppLayout>
-            } 
-          />
-          <Route 
-            path="/history" 
-            element={
-              <AppLayout>
-                <ProfileUpdatePrompt />
-                <History />
-              </AppLayout>
-            } 
-          />
-          <Route path="/profile-setup" element={<ProfileSetup />} />
-          <Route path="*" element={<NotFound />} />
-        </>
-      )}
+      {/* Auth Routes */}
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      
+      {/* Protected Routes */}
+      <Route 
+        path="/profile-setup" 
+        element={
+          <ProtectedRoute>
+            <ProfileSetup />
+          </ProtectedRoute>
+        } 
+      />
+      
+      <Route 
+        path="/" 
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ProfileUpdatePrompt />
+              <Dashboard />
+            </AppLayout>
+          </ProtectedRoute>
+        } 
+      />
+      
+      <Route 
+        path="/add-entry" 
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ProfileUpdatePrompt />
+              <AddEntry />
+            </AppLayout>
+          </ProtectedRoute>
+        } 
+      />
+      
+      <Route 
+        path="/history" 
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ProfileUpdatePrompt />
+              <History />
+            </AppLayout>
+          </ProtectedRoute>
+        } 
+      />
+      
+      {/* Redirect root to sign in if not authenticated */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
@@ -78,15 +82,17 @@ const AppRoutes = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <UserProfileProvider>
-        <CalorieProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
-        </CalorieProvider>
-      </UserProfileProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <UserProfileProvider>
+            <CalorieProvider>
+              <Toaster />
+              <Sonner />
+              <AppRoutes />
+            </CalorieProvider>
+          </UserProfileProvider>
+        </AuthProvider>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );

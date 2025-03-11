@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import { Home, PieChart, ListPlus, History, Menu } from 'lucide-react';
+import SignOutButton from './SignOutButton';
 
 interface NavItemProps {
   to: string;
@@ -37,12 +38,15 @@ const AppSidebar = () => {
           <span>CalTracker</span>
         </h1>
       </div>
-      <SidebarContent>
+      <SidebarContent className="flex flex-col h-full">
         <SidebarMenu>
           <NavItem to="/" icon={<Home className="h-5 w-5" />} label="Dashboard" />
           <NavItem to="/add-entry" icon={<ListPlus className="h-5 w-5" />} label="Add Entry" />
           <NavItem to="/history" icon={<History className="h-5 w-5" />} label="History" />
         </SidebarMenu>
+        <div className="mt-auto pt-6 px-4">
+          <SignOutButton />
+        </div>
       </SidebarContent>
     </Sidebar>
   );

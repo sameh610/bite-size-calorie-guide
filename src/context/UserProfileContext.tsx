@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { UserProfile } from '@/types/food';
+import { useAuth } from '@/context/AuthContext';
 
 interface UserProfileContextType {
   profile: UserProfile | null;
@@ -24,31 +25,47 @@ const UserProfileContext = createContext<UserProfileContextType | undefined>(und
 
 export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [profile, setProfileState] = useState<UserProfile | null>(null);
+  const { user } = useAuth();
 
-  // Load profile from localStorage on mount
+  // Load profile from localStorage on mount or when user changes
   useEffect(() => {
-    const savedProfile = localStorage.getItem('userProfile');
-    if (savedProfile) {
-      try {
-        const parsedProfile = JSON.parse(savedProfile);
-        // Convert stored date string back to Date object
-        setProfileState({
-          ...parsedProfile,
-          lastUpdated: new Date(parsedProfile.lastUpdated)
-        });
-      } catch (error) {
-        console.error('Error parsing saved profile', error);
-        toast.error('Failed to load your profile');
-      }
+    if (!user) {
+      setProfileState(null);
+      return;
     }
-  }, []);
+    
+    const loadProfile = () => {
+      const profileKey = `userProfile_${user.email}`;
+      const savedProfile = localStorage.getItem(profileKey);
+      
+      if (savedProfile) {
+        try {
+          const parsedProfile = JSON.parse(savedProfile);
+          // Convert stored date string back to Date object
+          setProfileState({
+            ...parsedProfile,
+            lastUpdated: new Date(parsedProfile.lastUpdated)
+          });
+        } catch (error) {
+          console.error('Error parsing saved profile', error);
+          toast.error('Failed to load your profile');
+        }
+      }
+    };
+    
+    loadProfile();
+  }, [user]);
 
   // Save profile to localStorage whenever it changes
   useEffect(() => {
-    if (profile) {
+    if (profile && user) {
+      const profileKey = `userProfile_${user.email}`;
+      localStorage.setItem(profileKey, JSON.stringify(profile));
+      
+      // For backward compatibility, also save to the old key
       localStorage.setItem('userProfile', JSON.stringify(profile));
     }
-  }, [profile]);
+  }, [profile, user]);
 
   const setProfile = (newProfile: UserProfile) => {
     setProfileState(newProfile);
