@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { useCalorie } from '@/context/CalorieContext';
@@ -31,7 +30,6 @@ const ProfileUpdatePrompt = () => {
   const [gender, setGender] = useState(profile?.gender || 'male');
   const [activityLevel, setActivityLevel] = useState(profile?.activityLevel || 'moderate');
 
-  // Check if we should prompt for an update when component mounts
   useEffect(() => {
     if (shouldPromptUpdate() && profile) {
       setOpen(true);
@@ -50,7 +48,6 @@ const ProfileUpdatePrompt = () => {
       lastUpdated: new Date()
     });
     
-    // Update the calorie goal based on the new profile
     const recommendedCalories = calculateDailyCalories();
     setDailyGoal(recommendedCalories);
     
@@ -104,7 +101,10 @@ const ProfileUpdatePrompt = () => {
 
           <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
-            <Select value={gender} onValueChange={setGender}>
+            <Select 
+              value={gender} 
+              onValueChange={(value: 'male' | 'female' | 'other') => setGender(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select gender" />
               </SelectTrigger>
@@ -118,7 +118,10 @@ const ProfileUpdatePrompt = () => {
 
           <div className="space-y-2">
             <Label htmlFor="activityLevel">Activity Level</Label>
-            <Select value={activityLevel} onValueChange={setActivityLevel}>
+            <Select 
+              value={activityLevel} 
+              onValueChange={(value: 'sedentary' | 'light' | 'moderate' | 'active' | 'very-active') => setActivityLevel(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select activity level" />
               </SelectTrigger>

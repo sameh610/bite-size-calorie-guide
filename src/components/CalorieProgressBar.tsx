@@ -17,15 +17,11 @@ const CalorieProgressBar = () => {
       </div>
       <Progress 
         value={percentage} 
-        className={cn("h-2.5", {
-          "bg-secondary": true, // base color
-        })}
+        className={cn(
+          "h-2.5",
+          percentage > 100 ? "bg-destructive" : "bg-secondary"
+        )}
       />
-      <style jsx>{`
-        :global(.Progress-indicator) {
-          background-color: ${percentage > 100 ? 'var(--destructive)' : 'var(--cal-purple)'} !important;
-        }
-      `}</style>
       <div className="flex justify-between items-center text-sm">
         <span>{caloriesConsumed} calories</span>
         <span className="text-gray-600">Goal: {dailyGoal} calories</span>
