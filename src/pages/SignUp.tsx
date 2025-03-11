@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
+import SocialAuthButtons from '@/components/SocialAuthButtons';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -111,6 +112,10 @@ const SignUp = () => {
               {isLoading ? 'Creating Account...' : 'Sign Up'}
             </Button>
           </form>
+          
+          <div className="mt-6">
+            <SocialAuthButtons isLoading={isLoading} />
+          </div>
         </CardContent>
         
         <CardFooter className="flex justify-center">
