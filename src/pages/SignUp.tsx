@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -31,15 +30,14 @@ const SignUp = ({ onSignUp, onNavigate }: SignUpProps) => {
     setIsLoading(true);
     
     try {
-      // Simulate API call (would be replaced with actual auth API)
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Store the auth state in localStorage
+      // Store auth state but DO NOT create a profile yet
       localStorage.setItem('authUser', JSON.stringify({ email, isAuthenticated: true }));
       
       toast.success('Account created successfully');
-      // Notify parent component about successful signup
-      onSignUp();
+      onSignUp(); // This will trigger navigation to profile setup
     } catch (error) {
       toast.error('Failed to create account');
       console.error(error);
