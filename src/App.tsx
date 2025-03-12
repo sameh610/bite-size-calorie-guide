@@ -60,21 +60,37 @@ const App = () => {
     setCurrentView("signin");
   };
 
+  // Handler for sign in
+  const handleSignIn = (hasUserProfile: boolean) => { 
+    setIsAuthenticated(true); 
+    setHasProfile(hasUserProfile);
+    setCurrentView(hasUserProfile ? "dashboard" : "profile-setup");
+  };
+  
+  // Handler for sign up
+  const handleSignUp = () => {
+    setIsAuthenticated(true);
+    setHasProfile(false);
+    setCurrentView("profile-setup");
+  };
+  
+  // Handler for profile setup completion
+  const handleProfileComplete = () => {
+    setHasProfile(true);
+    setCurrentView("dashboard");
+  };
+
   // Render content based on current view and auth status
   const renderContent = () => {
     if (!isAuthenticated) {
       if (currentView === "signup") {
-        return <SignUp onSignUp={() => { setIsAuthenticated(true); setCurrentView("profile-setup"); }} onNavigate={navigateTo} />;
+        return <SignUp onSignUp={handleSignUp} onNavigate={navigateTo} />;
       }
-      return <SignIn onSignIn={(hasUserProfile: boolean) => { 
-        setIsAuthenticated(true); 
-        setHasProfile(hasUserProfile);
-        setCurrentView(hasUserProfile ? "dashboard" : "profile-setup");
-      }} onNavigate={navigateTo} />;
+      return <SignIn onSignIn={handleSignIn} onNavigate={navigateTo} />;
     }
 
     if (!hasProfile || currentView === "profile-setup") {
-      return <ProfileSetup onComplete={() => { setHasProfile(true); setCurrentView("dashboard"); }} />;
+      return <ProfileSetup onComplete={handleProfileComplete} />;
     }
 
     // Main app views

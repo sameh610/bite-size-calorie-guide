@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -34,7 +35,10 @@ const SignIn = ({ onSignIn, onNavigate }: SignInProps) => {
       const userProfile = localStorage.getItem(profileKey);
       
       toast.success('Signed in successfully');
-      onSignIn(!!userProfile); // Pass true if profile exists, false otherwise
+      
+      // Pass true if profile exists, false otherwise
+      console.log("Profile exists:", !!userProfile);
+      onSignIn(!!userProfile);
     } catch (error) {
       toast.error('Failed to sign in');
       console.error(error);

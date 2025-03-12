@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,7 @@ const SignUp = ({ onSignUp, onNavigate }: SignUpProps) => {
       localStorage.setItem('authUser', JSON.stringify({ email, isAuthenticated: true }));
       
       toast.success('Account created successfully');
+      console.log("Redirecting to profile setup");
       onSignUp(); // This will trigger navigation to profile setup
     } catch (error) {
       toast.error('Failed to create account');
