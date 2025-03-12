@@ -31,10 +31,11 @@ const SignIn = () => {
       const hasProfile = localStorage.getItem('userProfile');
       
       toast.success('Signed in successfully');
-      if (hasProfile) {
-        navigate('/');
-      } else {
+      // Always redirect to profile setup if they don't have a profile
+      if (!hasProfile) {
         navigate('/profile-setup');
+      } else {
+        navigate('/');
       }
     } catch (error) {
       toast.error('Failed to sign in');

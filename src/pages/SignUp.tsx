@@ -35,6 +35,7 @@ const SignUp = () => {
       localStorage.setItem('authUser', JSON.stringify({ email, isAuthenticated: true }));
       
       toast.success('Account created successfully');
+      // Always redirect to profile setup
       navigate('/profile-setup');
     } catch (error) {
       toast.error('Failed to create account');
