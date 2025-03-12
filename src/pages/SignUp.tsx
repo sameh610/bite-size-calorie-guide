@@ -31,11 +31,11 @@ const SignUp = () => {
       // Simulate API call (would be replaced with actual auth API)
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Store the auth state in localStorage (temporary solution)
+      // Store the auth state in localStorage
       localStorage.setItem('authUser', JSON.stringify({ email, isAuthenticated: true }));
       
       toast.success('Account created successfully');
-      // Always redirect to profile setup
+      // Always redirect to profile setup for new accounts
       navigate('/profile-setup');
     } catch (error) {
       toast.error('Failed to create account');

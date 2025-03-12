@@ -24,14 +24,16 @@ const SignIn = () => {
       // Simulate API call (would be replaced with actual auth API)
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Store the auth state in localStorage (temporary solution)
+      // Store the auth state in localStorage
       localStorage.setItem('authUser', JSON.stringify({ email, isAuthenticated: true }));
       
       // Check if user has a profile already
-      const hasProfile = localStorage.getItem('userProfile');
+      const profileKey = `userProfile_${email}`;
+      const hasProfile = localStorage.getItem(profileKey);
       
       toast.success('Signed in successfully');
-      // Always redirect to profile setup if they don't have a profile
+      
+      // Always redirect to profile setup if no profile exists
       if (!hasProfile) {
         navigate('/profile-setup');
       } else {
