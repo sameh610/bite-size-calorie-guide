@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -24,20 +23,18 @@ const SignIn = ({ onSignIn, onNavigate }: SignInProps) => {
     setIsLoading(true);
     
     try {
-      // Simulate API call (would be replaced with actual auth API)
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Store the auth state in localStorage
+      // Store auth state
       localStorage.setItem('authUser', JSON.stringify({ email, isAuthenticated: true }));
       
-      // Check if user has a profile already
+      // Check for existing profile using email-specific key
       const profileKey = `userProfile_${email}`;
-      const hasProfile = localStorage.getItem(profileKey);
+      const userProfile = localStorage.getItem(profileKey);
       
       toast.success('Signed in successfully');
-      
-      // Notify parent component about auth status and profile existence
-      onSignIn(!!hasProfile);
+      onSignIn(!!userProfile); // Pass true if profile exists, false otherwise
     } catch (error) {
       toast.error('Failed to sign in');
       console.error(error);
