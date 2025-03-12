@@ -1,6 +1,5 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { useCalorie } from '@/context/CalorieContext';
 import { Button } from '@/components/ui/button';
@@ -17,10 +16,13 @@ import {
 } from '@/components/ui/select';
 import HeightEstimator from '@/components/HeightEstimator';
 
-const ProfileSetup = () => {
+interface ProfileSetupProps {
+  onComplete: () => void;
+}
+
+const ProfileSetup = ({ onComplete }: ProfileSetupProps) => {
   const { setProfile, calculateDailyCalories } = useUserProfile();
   const { setDailyGoal } = useCalorie();
-  const navigate = useNavigate();
   
   const [height, setHeight] = useState(170);
   const [weight, setWeight] = useState(70);
@@ -47,7 +49,8 @@ const ProfileSetup = () => {
     const recommendedCalories = calculateDailyCalories();
     setDailyGoal(recommendedCalories);
     
-    navigate('/');
+    // Notify parent component that profile setup is complete
+    onComplete();
   };
 
   const handleEstimatedHeight = (estimatedHeight: number) => {

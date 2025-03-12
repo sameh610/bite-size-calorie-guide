@@ -1,6 +1,5 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,8 +8,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Eye, EyeOff } from 'lucide-react';
 import SocialAuthButtons from '@/components/SocialAuthButtons';
 
-const SignUp = () => {
-  const navigate = useNavigate();
+interface SignUpProps {
+  onSignUp: () => void;
+  onNavigate: (view: string) => void;
+}
+
+const SignUp = ({ onSignUp, onNavigate }: SignUpProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -35,8 +38,8 @@ const SignUp = () => {
       localStorage.setItem('authUser', JSON.stringify({ email, isAuthenticated: true }));
       
       toast.success('Account created successfully');
-      // Always redirect to profile setup for new accounts
-      navigate('/profile-setup');
+      // Notify parent component about successful signup
+      onSignUp();
     } catch (error) {
       toast.error('Failed to create account');
       console.error(error);
@@ -46,7 +49,7 @@ const SignUp = () => {
   };
 
   const navigateToSignIn = () => {
-    navigate('/signin');
+    onNavigate('signin');
   };
 
   return (

@@ -1,6 +1,5 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,8 +8,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Eye, EyeOff } from 'lucide-react';
 import SocialAuthButtons from '@/components/SocialAuthButtons';
 
-const SignIn = () => {
-  const navigate = useNavigate();
+interface SignInProps {
+  onSignIn: (hasProfile: boolean) => void;
+  onNavigate: (view: string) => void;
+}
+
+const SignIn = ({ onSignIn, onNavigate }: SignInProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -33,12 +36,8 @@ const SignIn = () => {
       
       toast.success('Signed in successfully');
       
-      // Always redirect to profile setup if no profile exists
-      if (!hasProfile) {
-        navigate('/profile-setup');
-      } else {
-        navigate('/');
-      }
+      // Notify parent component about auth status and profile existence
+      onSignIn(!!hasProfile);
     } catch (error) {
       toast.error('Failed to sign in');
       console.error(error);
@@ -48,7 +47,7 @@ const SignIn = () => {
   };
 
   const navigateToSignUp = () => {
-    navigate('/signup');
+    onNavigate('signup');
   };
 
   return (
